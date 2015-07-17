@@ -20,7 +20,7 @@ module.exports = function (grunt) {
       dist: {
         files: [
           {
-            expand: true, 
+            expand: true,
             cwd   : '<%= pkg.directories.tmp %>/<%= pkg.directories.sass %>',
             src   : ['*.scss'],
             dest  : '<%= pkg.directories.tmp %>/<%= pkg.directories.css %>',
@@ -82,6 +82,13 @@ module.exports = function (grunt) {
           base     : '<%= pkg.directories.dist %>',
           keepalive: true
         }
+      }
+    },
+
+    concurrent: {
+      connectAndWatch: ['connect', 'watch'],
+      options: {
+        logConcurrentOutput: true
       }
     },
 
@@ -187,6 +194,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-concurrent');
 
   // Third-party plugins
   grunt.loadNpmTasks('grunt-shell');
@@ -203,4 +211,5 @@ module.exports = function (grunt) {
   grunt.registerTask('compile', ['sass', 'dustjs', 'clean:temp_src']);
   grunt.registerTask('build', ['build_clean', 'shell:bower_install', 'copy:bower_lib', 'copy:node_lib', 'copy:temp', 'compile', 'copy:dist', 'clean:temp']);
   grunt.registerTask('deploy', ['build', 'bundle_deploy', 'shell:deploy', 'clean:deploy']);
+  grunt.registerTask('develop', ['concurrent:connectAndWatch']);
 };
